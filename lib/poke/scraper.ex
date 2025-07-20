@@ -5,7 +5,15 @@ defmodule Poke.Scraper do
 
   def fetch_151_cards do
     IO.puts("Fetching cards from 151 set...")
-    fetch_set_cards("sv3pt5")
+    cards = fetch_set_cards("sv3pt5")
+
+    # Sort cards by their number (convert to integer for proper sorting)
+    Enum.sort_by(cards, fn card ->
+      case Integer.parse(card.number || "0") do
+        {num, _} -> num
+        :error -> 0
+      end
+    end)
   end
 
   defp fetch_scarlet_violet_cards do
@@ -18,6 +26,12 @@ defmodule Poke.Scraper do
       sv_sets
       |> Enum.flat_map(&fetch_set_cards/1)
       |> Enum.uniq_by(& &1.id)
+      |> Enum.sort_by(fn card ->
+        case Integer.parse(card.number || "0") do
+          {num, _} -> num
+          :error -> 0
+        end
+      end)
 
     IO.puts("Fetched #{length(all_cards)} unique Scarlet & Violet cards")
     all_cards

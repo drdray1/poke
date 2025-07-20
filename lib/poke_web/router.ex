@@ -18,6 +18,8 @@ defmodule PokeWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/cards/151", CardsController, :index_151
+    get "/cards", CardsController, :index_all
   end
 
   # Other scopes may use custom stacks.

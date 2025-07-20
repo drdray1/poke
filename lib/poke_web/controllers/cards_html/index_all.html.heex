@@ -1,0 +1,100 @@
+<.header>
+  All Pokemon Cards
+  <:subtitle>Browse the complete Scarlet & Violet collection</:subtitle>
+</.header>
+
+<div class="mt-8">
+  <div class="mb-6 text-center">
+    <p class="text-lg text-gray-600">
+      Found <span class="font-bold text-blue-600">{length(@cards)}</span> cards total
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <%= for card <- @cards do %>
+      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:scale-105">
+        <div class="relative">
+          <%= if card.images && card.images["small"] do %>
+            <img
+              src={card.images["small"]}
+              alt={card.name}
+              class="w-full h-80 object-contain bg-gradient-to-br from-gray-50 to-gray-100"
+              loading="lazy"
+            />
+          <% else %>
+            <div class="w-full h-80 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+              <span class="text-white text-lg font-semibold">No Image</span>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="p-4">
+          <h3 class="font-bold text-lg text-gray-900 mb-3 text-center min-h-[3rem] flex items-center justify-center">
+            {card.name}
+          </h3>
+          
+<!-- Card number, set, and rarity -->
+          <div class="flex justify-between items-center mb-3 flex-wrap gap-2">
+            <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+              #{card.number}
+            </span>
+            <%= if card.set && card.set.name do %>
+              <span class="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                {card.set.name}
+              </span>
+            <% end %>
+            <%= if card.rarity do %>
+              <span class="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold">
+                {card.rarity}
+              </span>
+            <% end %>
+          </div>
+
+          <div class="space-y-3 text-sm">
+            <%= if card.hp do %>
+              <div class="flex items-center justify-between bg-red-50 px-3 py-2 rounded-lg">
+                <span class="font-medium text-gray-700">HP:</span>
+                <span class="font-bold text-red-600 text-lg">{card.hp}</span>
+              </div>
+            <% end %>
+            
+<!-- Average Price -->
+            <div class="flex items-center justify-between bg-green-50 px-3 py-2 rounded-lg">
+              <span class="font-medium text-gray-700">Avg Price:</span>
+              <span class="font-bold text-green-600 text-lg">
+                {format_price(get_average_price(card))}
+              </span>
+            </div>
+
+            <%= if card.types && length(card.types) > 0 do %>
+              <div class="text-center">
+                <div class="flex flex-wrap gap-2 justify-center">
+                  <%= for type <- card.types do %>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">
+                      {type}
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <%= if card.artist do %>
+              <div class="text-xs text-gray-500 text-center bg-gray-50 px-3 py-2 rounded-lg">
+                <span class="font-medium">Artist:</span> {card.artist}
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= if length(@cards) == 0 do %>
+    <div class="text-center py-16">
+      <div class="bg-gray-100 rounded-lg p-8 max-w-md mx-auto">
+        <p class="text-gray-600 text-lg mb-4">No cards found</p>
+        <p class="text-gray-500">Try refreshing the page to fetch the latest cards.</p>
+      </div>
+    </div>
+  <% end %>
+</div>
